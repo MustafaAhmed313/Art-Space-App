@@ -1,11 +1,15 @@
 package com.example.artspaceapp
 
 import android.media.Image
+import android.os.Build
 import android.os.Bundle
+import android.view.WindowManager
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.gestures.detectDragGestures
+import androidx.compose.foundation.gestures.detectHorizontalDragGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -25,11 +29,16 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -61,7 +70,9 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun ArtSpaceApp(modifier: Modifier) {
 
-    val index = 1;
+    var index by remember {
+        mutableIntStateOf(0)
+    };
 
     val arts = listOf<Art>(
         Art(
@@ -90,17 +101,23 @@ fun ArtSpaceApp(modifier: Modifier) {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
 
-        ArtContent(modifier = modifier, art = arts[index])
+        ArtContent(
+            modifier = modifier,
+            art = arts[index]
+        )
 
         Row(
             modifier = modifier
-                .padding(bottom = 50.dp),
+                .padding(bottom = 30.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
 
         ) {
             Button(
-                onClick = { /*TODO*/ },
-                modifier = Modifier.size(150.dp, 35.dp),
+                onClick = {
+                    if (index == 0) index = arts.size - 1
+                    else index -= 1
+                },
+                modifier = Modifier.size(150.dp, 40.dp),
                 colors = ButtonDefaults.buttonColors(
                     containerColor = Color(0xff525d76),
                     contentColor = Color.White
@@ -112,8 +129,11 @@ fun ArtSpaceApp(modifier: Modifier) {
             Spacer(modifier = Modifier.size(width = 50.dp, height = 0.dp))
 
             Button(
-                onClick = { /*TODO*/ },
-                modifier = Modifier.size(150.dp, 35.dp),
+                onClick = {
+                    index += 1
+                    index %= arts.size
+                },
+                modifier = Modifier.size(150.dp, 40.dp),
                 colors = ButtonDefaults.buttonColors(
                     containerColor = Color(0xff525d76),
                     contentColor = Color.White
@@ -129,7 +149,7 @@ fun ArtSpaceApp(modifier: Modifier) {
 fun ArtContent(modifier: Modifier, art: Art) {
     Column(
         modifier = modifier
-            .padding(bottom = 50.dp),
+            .padding(bottom = 25.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.SpaceBetween
     ) {
@@ -143,23 +163,26 @@ fun ArtContent(modifier: Modifier, art: Art) {
             Image(
                 painter = art.painter,
                 contentDescription = art.title,
-                modifier = modifier.fillMaxSize()
+                modifier = modifier.fillMaxSize(),
+                contentScale = ContentScale.Crop
             )
 
         }
         
-        Spacer(modifier = Modifier.size(width = 0.dp, height = 50.dp))
+        Spacer(modifier = Modifier.size(width = 0.dp, height = 80.dp))
 
         Column(
             modifier = modifier
-                .size(width = 290.dp, height = 100.dp)
+                .size(width = 350.dp, height = 120.dp)
                 .background(color = Color(0xffeceaf1))
                 .wrapContentSize(),
-            verticalArrangement = Arrangement.SpaceAround
+            verticalArrangement = Arrangement.SpaceAround,
+            horizontalAlignment = Alignment.Start
         ) {
             Text(
                 text = art.title,
-                fontSize = 20.sp
+                fontSize = 30.sp,
+                fontWeight = FontWeight.W300
             )
             Row (modifier = modifier) {
                 Text(
