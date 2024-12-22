@@ -1,3 +1,14 @@
 <resources>
     <string name="app_name">ArtSpaceApp</string>
+    <string name="next_btn">Next</string>
+    <string name="previous_btn">Previous</string>
+    <string name="image1_title">ECPC College Contest</string>
+    <string name="image1_artist">Bakar Couch</string>
+    <string name="image1_year">2023</string>
+    <string name="image2_title">TechTalent Organization</string>
+    <string name="image2_artist">Mustafa Ahmed</string>
+    <string name="image2_year">2024</string>
+    <string name="image3_title">Eclipses Project</string>
+    <string name="image3_artist">Google Company</string>
+    <string name="image3_year">2022</string>
 </resources>
